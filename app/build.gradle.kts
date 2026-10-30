@@ -6,11 +6,7 @@ plugins {
 
 android {
     namespace = "com.scorller"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.scorller"
@@ -51,11 +47,14 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.datastore.preferences)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.kotlinx.coroutines.play.services)
+    implementation(libs.coil.compose)
+    implementation(libs.jsoup)
     debugImplementation(libs.androidx.ui.tooling)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)

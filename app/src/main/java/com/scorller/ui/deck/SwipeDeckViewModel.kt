@@ -52,8 +52,6 @@ class SwipeDeckViewModel(
             _currentIndex.value -= 1
         }
     }
-
-    fun myVoteFor(item: Item): Boolean? = userId?.let { item.votes[it] }
 }
 
 class SwipeDeckViewModelFactory(

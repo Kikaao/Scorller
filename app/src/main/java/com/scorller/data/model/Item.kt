@@ -11,7 +11,7 @@ data class Item(
     val createdAt: Timestamp? = null,
     val createdByUserId: String = "",
     val source: String = "manual",
-    val linkPreview: Map<String, Any>? = null,
+    val linkPreview: Map<String, Any?>? = null,
     val votes: Map<String, Boolean> = emptyMap()
 ) {
     val yesCount: Int get() = votes.values.count { it }

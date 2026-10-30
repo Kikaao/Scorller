@@ -1,6 +1,7 @@
 package com.scorller.data.repository
 
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.scorller.data.model.Item
@@ -76,7 +77,9 @@ class SessionRepository(private val firestore: FirebaseFirestore = FirebaseFires
         photoUrls: List<String>,
         link: String?,
         notes: String?,
-        createdByUserId: String
+        createdByUserId: String,
+        source: String = "manual",
+        linkPreview: Map<String, Any?>? = null
     ) {
         val doc = itemsRef(sessionId).document()
         val item = Item(
@@ -87,8 +90,8 @@ class SessionRepository(private val firestore: FirebaseFirestore = FirebaseFires
             notes = notes,
             createdAt = Timestamp.now(),
             createdByUserId = createdByUserId,
-            source = "manual",
-            linkPreview = null,
+            source = source,
+            linkPreview = linkPreview,
             votes = emptyMap()
         )
         doc.set(item.toMap()).await()
@@ -130,7 +133,7 @@ private fun Item.toMap(): Map<String, Any?> = mapOf(
     "votes" to votes
 )
 
-private fun com.google.firebase.firestore.DocumentSnapshot.toSession(): Session? {
+private fun DocumentSnapshot.toSession(): Session? {
     val title = getString("title") ?: return null
     return Session(
         id = id,
@@ -141,14 +144,14 @@ private fun com.google.firebase.firestore.DocumentSnapshot.toSession(): Session?
     )
 }
 
-private fun com.google.firebase.firestore.DocumentSnapshot.toItem(): Item? {
+private fun DocumentSnapshot.toItem(): Item? {
     val title = getString("title") ?: return null
     @Suppress("UNCHECKED_CAST")
     val votes = (get("votes") as? Map<String, Any?>)?.mapValues { it.value as? Boolean ?: false } ?: emptyMap()
     @Suppress("UNCHECKED_CAST")
     val photoUrls = (get("photoUrls") as? List<String>) ?: emptyList()
     @Suppress("UNCHECKED_CAST")
-    val linkPreview = get("linkPreview") as? Map<String, Any>
+    val linkPreview = get("linkPreview") as? Map<String, Any?>
     return Item(
         id = id,
         title = title,
@@ -163,7 +166,7 @@ private fun com.google.firebase.firestore.DocumentSnapshot.toItem(): Item? {
     )
 }
 
-private fun com.google.firebase.firestore.DocumentSnapshot.toParticipant(): Participant? {
+private fun DocumentSnapshot.toParticipant(): Participant? {
     val displayName = getString("displayName") ?: return null
     return Participant(
         userId = id,
